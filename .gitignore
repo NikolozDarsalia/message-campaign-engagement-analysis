@@ -12,3 +12,6 @@ wheels/
 # Data
 *.csv
 *.parquet
+
+# temporary folder of DuckDB
+.tmp
