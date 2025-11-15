@@ -46,12 +46,16 @@ def engineer_all_features(df: pd.DataFrame, verbose: bool = True) -> pd.DataFram
     
     # Step 2: Rolling features
     df = create_rolling_features(df, verbose=verbose)
-    
-    # Step 3: Engagement features
-    df = create_engagement_features(df, verbose=verbose)
-    
-    # Step 4: Market features
+
+    # Step 3: Market features
     df = create_market_features(df, verbose=verbose)
+
+    # Remain only bulk messages
+    df = df.loc[df['message_type'] == 'bulk', :].reset_index(drop=True)
+
+    # Step 4: Engagement features
+    df = create_engagement_features(df, verbose=verbose)
+
     
     # Step 5: Company level performance features
     df = add_global_campaign_performance_features(df)
