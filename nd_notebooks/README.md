@@ -5,6 +5,8 @@ ENGINEERED FEATURES DOCUMENTATION
 This document describes all features created through feature engineering for
 email/push message campaign analysis.
 
+10-17 types of features are calculated based on bulk campaigns only.
+
 ================================================================================
 """
 
@@ -58,6 +60,21 @@ FEATURE_DOCUMENTATION = {
             "description": "Hours between send and first click",
             "calculation": "(clicked_first_time_at - sent_at) in hours",
             "use_case": "Measure conversion speed"
+        }
+        "days_since_last_bulk": {
+            "description": "Days since last bulk to this client",
+            "calculation": "Time difference for bulk campaigns only",
+            "use_case": "Campaign-specific frequency analysis"
+        },
+        "days_since_last_trigger": {
+            "description": "Days since last trigger to this client",
+            "calculation": "Time difference for trigger campaigns only",
+            "use_case": "Campaign-specific frequency analysis"
+        },
+        "days_since_last_transactional": {
+            "description": "Days since last transactional to this client",
+            "calculation": "Time difference for transactional campaigns only",
+            "use_case": "Campaign-specific frequency analysis"
         }
     },
     
@@ -807,7 +824,7 @@ FEATURE_DOCUMENTATION = {
 # ============================================================================
 
 FEATURE_CATEGORIES = {
-    "Temporal Features (9)": "Time-based features extracted from timestamps",
+    "Temporal Features (12)": "Time-based features extracted from timestamps",
     "Channel Features (2)": "Email vs push notification indicators",
     "Campaign Type Features (4)": "Bulk, triggered, transactional indicators",
     "Rolling Volume Features (10)": "Message frequency over time windows",

@@ -50,6 +50,9 @@ def create_market_features(df: pd.DataFrame, verbose: bool = True) -> pd.DataFra
         right_index=True,
         direction='backward'
     )
+
+    # Sort by client and time
+    df = df.sort_values(['client_id', 'sent_at', 'message_id'])
     
     if verbose:
         print(f"  ✅ Created 5 market-level features")

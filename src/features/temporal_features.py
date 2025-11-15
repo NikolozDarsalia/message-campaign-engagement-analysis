@@ -38,10 +38,10 @@ def create_temporal_features(df: pd.DataFrame, verbose: bool = True) -> pd.DataF
     # Binary indicators
     df['is_weekend'] = (df['weekday'] >= 5).astype(int)
     df['is_working_hours'] = df['hour'].between(9, 18).astype(int)
-    df['is_morning'] = df['hour'].between(6, 12).astype(int)
-    df['is_afternoon'] = df['hour'].between(12, 18).astype(int)
+    df['is_morning'] = df['hour'].between(6, 11).astype(int)
+    df['is_afternoon'] = df['hour'].between(12, 17).astype(int)
     df['is_evening'] = df['hour'].between(18, 23).astype(int)
-    df['is_night'] = ((df['hour'] >= 23) | (df['hour'] < 6)).astype(int)
+    df['is_night'] = ((df['hour'] > 23) | (df['hour'] < 6)).astype(int)
     
     # Days since last message per client
     df['days_since_last_msg'] = (
@@ -65,6 +65,20 @@ def create_temporal_features(df: pd.DataFrame, verbose: bool = True) -> pd.DataF
                     .values
                 )
     
+    # Days since last message by message_type
+    if 'message_type' in df.columns:
+        for tp in ['bulk', 'trigger', 'transactional']:
+            df[f'days_since_last_{tp}'] = np.nan
+            mask = df['message_type'] == tp
+            if mask.any():
+                df.loc[mask, f'days_since_last_{tp}'] = (
+                    df[mask].groupby('client_id')['sent_at']
+                    .diff()
+                    .dt.total_seconds()
+                    .div(86400)
+                    .values
+                )
+
     if verbose:
         print(f"  ✅ Created {14 + (2 if 'channel_x' in df.columns else 0)} temporal features")
     
