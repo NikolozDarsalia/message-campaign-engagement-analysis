@@ -1,0 +1,243 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\setlength{\parskip}{0.9em}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+
+\title{Information Overload, Cognitive Capacity, and Customer Engagement:\\
+Evidence from Retail Messaging Data}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction and Major Research Question}
+
+Digital retail platforms rely heavily on repeated messaging---emails, push notifications, and in-app messages---to stimulate customer engagement. Yet these messages arrive in an environment where customers face limited attention and must make repeated decisions under uncertainty: whether opening the next message will be worth the cognitive cost.
+
+This paper studies how different sources of information pressure---including a firm’s own messaging frequency, competitor-side market pressure, contextual timing (weekday, hour, holidays), and major news events---affect customers’ cognitive capacity, fatigue, and ultimately engagement decisions.
+
+\textbf{Central Research Question:}
+
+\begin{quote}
+How do multiple information-environment factors shape customer cognitive capacity and thereby influence message-opening behavior in retail settings?
+\end{quote}
+
+A motivating idea is that attention is scarce. When customers experience high information pressure---whether from the firm, from competitors, or from the external environment---their ability to process additional commercial messages declines. This results in message fatigue, lower engagement, and potentially market failure where firms collectively oversupply commercial information.
+
+We also ask a second, practical question:
+
+\begin{quote}
+How do these effects differ across customer segments (loyal, occasional, dormant), and how should firms adjust messaging strategies for each group?
+\end{quote}
+
+These questions are directly relevant for retail campaign planning. Ignoring information pressure risks inefficient campaigns, reduced ROI, and long-run habituation effects.
+
+\section{Conceptual Framework: Decision Under Uncertainty}
+
+We model customer message engagement as a decision under uncertainty.
+
+Customer $i$ at time $t$ chooses action $a_{it} \in \{0,1\}$ where $1=$ open, $0=$ ignore. Utility from opening:
+
+\[
+U_{it}(1) = E_{it}[V_{it}] - C_{it},
+\]
+\[
+U_{it}(0) = 0.
+\]
+
+Decision rule:
+
+\[
+a_{it} = 1 \iff E_{it}[V_{it}] - C_{it} \ge 0.
+\]
+
+\subsection*{Expected Value}
+
+\[
+E_{it}[V_{it}] = \theta_i \cdot q_{it}
+\]
+
+\begin{itemize}[leftmargin=*]
+\item $\theta_i$: latent preference / inherent propensity to value offers.
+\item $q_{it}$: message-specific relevance signal.
+\end{itemize}
+
+\subsection*{Cognitive Cost and Fatigue}
+
+\[
+C_{it} = \alpha_i + \beta F_{it}
+\]
+
+\begin{itemize}[leftmargin=*]
+\item $\alpha_i$: baseline cognitive cost.
+\item $F_{it}$: fatigue state.
+\item $\beta$: conversion factor from fatigue to cost.
+\end{itemize}
+
+Fatigue dynamics:
+
+\[
+F_{i,t} = \rho F_{i,t-1} + \gamma \cdot \text{msgs}_{i,t-1} 
+        + \delta M_t + \varepsilon_{it}.
+\]
+
+\begin{itemize}[leftmargin=*]
+\item $\text{msgs}_{i,t-1}$: recent firm messages.
+\item $M_t$: market-wide or external information pressure.
+\item $\rho \in [0,1]$: persistence.
+\end{itemize}
+
+Customers with high cognitive capacity behave almost risk-neutral; fatigued customers avoid messages even if potentially valuable.
+
+This framework predicts heterogeneous responses across customer segments.
+
+\section{Testable Predictions}
+
+We derive three main predictions:
+
+\begin{enumerate}
+\item \textbf{Information pressure reduces engagement.}  
+Higher messaging frequency (own or market-wide) lowers open probability by increasing cognitive cost.
+
+\item \textbf{Heterogeneity across segments.}
+    \begin{itemize}
+        \item Loyal customers exhibit slower fatigue accumulation.
+        \item Dormant customers show strong negative responses even at moderate frequency.
+    \end{itemize}
+
+\item \textbf{Context matters.}  
+Timing (weekday, hour, holiday periods) shifts cognitive cost and open rates.
+\end{enumerate}
+
+\section{Data Plan}
+
+We use fully engineered internal datasets.
+
+\subsection*{Outcome Variable}
+\begin{itemize}[leftmargin=*]
+\item Message opened (binary)
+\end{itemize}
+
+\subsection*{Key Explanatory Variables}
+
+\textbf{Own-firm information pressure}
+\begin{itemize}[leftmargin=*]
+\item Messages in last 1/7/30 days
+\item Recency since last message
+\item Frequency volatility
+\item Fatigue ratios (short-term vs long-term)
+\end{itemize}
+
+\textbf{Market-wide information pressure}
+\begin{itemize}[leftmargin=*]
+\item Competitor or simulated market messaging averages
+\item External news cycles (if available)
+\end{itemize}
+
+\textbf{Contextual cognitive-load shifters}
+\begin{itemize}[leftmargin=*]
+\item Day of week, time of day
+\item Holiday indicator
+\item Special events
+\end{itemize}
+
+\textbf{Expected-value proxies}
+\begin{itemize}[leftmargin=*]
+\item Customer historical open rates (1-week, 1-month, lifetime)
+\item Subject line features, personalization, discount mentions
+\item Campaign historical open/click rates
+\item Customer value (visits, purchases)
+\end{itemize}
+
+\textbf{Customer segmentation (three groups)}
+\begin{enumerate}
+\item Loyal / high-engagement
+\item Occasional
+\item Dormant / low-engagement
+\end{enumerate}
+
+\section{Empirical Strategy}
+
+We implement three components:
+
+\subsection{1. Descriptive Exploration}
+\begin{itemize}[leftmargin=*]
+\item Open rate vs. messaging frequency
+\item Fatigue curves across segments
+\item Contextual timing patterns
+\end{itemize}
+
+\subsection{2. Reduced-Form Econometric Model}
+
+We estimate:
+
+\[
+\Pr(\text{open}_{it}=1)
+= 
+\Lambda\big(
+\beta_1 \text{Fatigue}_{it}
++ \beta_2 \text{ExpectedValue}_{it}
++ \beta_3(\text{Fatigue}\times\text{Segment})
++ X_{it}\gamma
+\big),
+\]
+
+where $X_{it}$ includes timing controls and campaign fixed effects.
+
+\subsection{3. Heterogeneous Effects \& Policy Simulations}
+\begin{itemize}[leftmargin=*]
+\item Estimate models separately by segment.
+\item Simulate open probabilities under alternative messaging strategies.
+\item Provide segment-specific recommendations.
+\end{itemize}
+
+\section{Expected Outputs}
+
+\subsection*{Figures}
+\begin{itemize}[leftmargin=*]
+\item Fatigue curves for each segment
+\item Heatmap: predicted open probability by (fatigue $\times$ expected value)
+\item Timing-effect plots
+\end{itemize}
+
+\subsection*{Tables}
+\begin{itemize}[leftmargin=*]
+\item Model coefficients and marginal effects
+\item Heterogeneous effects by segment
+\item Simulation results for optimal messaging frequencies
+\end{itemize}
+
+\subsection*{Contribution}
+\begin{itemize}[leftmargin=*]
+\item Demonstrate how multiple information pressures jointly determine cognitive capacity.
+\item Highlight strong heterogeneity across customer segments.
+\item Provide actionable guidance for messaging under limited attention.
+\end{itemize}
+
+\section{Feasibility}
+
+We already have:
+\begin{itemize}[leftmargin=*]
+\item Fatigue features, expected-value proxies, and market pressure features
+\item Segmentation options
+\item Clean panel data structure
+\item Experience with logit/probit modeling and interactions
+\end{itemize}
+
+The analysis is fully feasible within the available timeline.
+
+\section*{Conclusion}
+
+This project combines behavioral economics, decision-making under uncertainty, and high-dimensional retail data to understand how information environments shape customer engagement---and how firms can design more effective, less intrusive communication strategies.
+
+\end{document}
