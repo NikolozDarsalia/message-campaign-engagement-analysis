@@ -53,7 +53,7 @@ def create_temporal_features(df: pd.DataFrame, verbose: bool = True) -> pd.DataF
     
     # Days since last message by channel
     if 'channel_x' in df.columns:
-        for ch in ['email', 'push']:
+        for ch in ['email', 'mobile_push']:
             df[f'days_since_last_{ch}'] = np.nan
             mask = df['channel_x'] == ch
             if mask.any():
