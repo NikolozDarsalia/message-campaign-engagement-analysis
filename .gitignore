@@ -14,9 +14,7 @@ wheels/
 # Data
 client_first_purchase_date.csv
 campaigns.csv
-messages.parquet
-messages_subset.parquet
-whole_df_with_fe.parquet
+*.parquet
 
 # temporary folder of DuckDB
 .tmp
