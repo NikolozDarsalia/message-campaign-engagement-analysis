@@ -121,7 +121,7 @@ FEATURE_DOCUMENTATION = {
     },
     
     # ========================================================================
-    # 4. ROLLING MESSAGE VOLUME FEATURES (ANTI-LEAKAGE)
+    # 4. ROLLING MESSAGE VOLUME FEATURES
     # ========================================================================
     "ROLLING_VOLUME_FEATURES": {
         "sent_count_1d": {
@@ -469,6 +469,11 @@ FEATURE_DOCUMENTATION = {
             "description": "Hours to open for previous message",
             "calculation": "Shifted time_to_open_hours by 1 position per client",
             "use_case": "Previous engagement speed"
+        },
+        "time_to_click_hours_prev": {
+            "description": "Hours to click for previous message",
+            "calculation": "Shifted time_to_click_hours by 1 position per client",
+            "use_case": "Previous conversion speed"
         }
     },
     
@@ -814,7 +819,114 @@ FEATURE_DOCUMENTATION = {
             "calculation": "Weighted sum of bounce/block/complaint/unsubscribe metrics",
             "use_case": "Assess overall deliverability and spam reputation"
         }
-    }
+    },
+
+
+
+    # ========================================================================
+    # 18. TIME SINCE LAST ACTION FEATURES
+    # ========================================================================
+    "TIME_SINCE_ACTION_FEATURES": {
+        "time_since_last_open_hours": {
+            "description": "Hours since the client last opened any previous message",
+            "calculation": "For each client, time difference in hours between sent_at and the previous message with is_opened==1, using groupby and shift within client",
+            "use_case": "Captures recency of engagement and potential freshness of attention"
+        },
+        "time_since_last_click_hours": {
+            "description": "Hours since the client last clicked any previous message",
+            "calculation": "For each client, time difference in hours between sent_at and the previous message with is_clicked==1, using groupby and shift within client",
+            "use_case": "Measures recency of deeper engagement or interest"
+        },
+        "time_since_last_purchase_hours": {
+            "description": "Hours since the client last made a purchase attributed to any previous message",
+            "calculation": "For each client, time difference in hours between sent_at and the previous message with is_purchased==1, using groupby and shift within client",
+            "use_case": "Proxy for time since last economic transaction, relevant for propensity to respond"
+        }
+    },
+
+
+    # ========================================================================
+    # 19. ROLLING TIME-TO-ACTION FEATURES
+    # ========================================================================
+    "ROLLING_TIME_TO_ACTION_FEATURES": {
+        "time_to_open_hours_avg_1m": {
+            "description": "Average time to open in the past month (excluding current message)",
+            "calculation": "Rolling mean of time_to_open_hours over a 30d window per client, with closed='left' so the current message is excluded",
+            "use_case": "Captures how quickly the client typically reacts to messages in recent history"
+        },
+        "time_to_click_hours_avg_1m": {
+            "description": "Average time to click in the past month (excluding current message)",
+            "calculation": "Rolling mean of time_to_click_hours over a 30d window per client, with closed='left'",
+            "use_case": "Measures recent speed of deeper engagement and conversion"
+        }
+    },
+
+
+    # ========================================================================
+    # 20. OPEN/CLICK COUNT WINDOW FEATURES
+    # ========================================================================
+    "OPEN_CLICK_COUNT_WINDOW_FEATURES": {
+        "opened_count_1w": {
+            "description": "Number of messages opened by the client in the past week",
+            "calculation": "Rolling sum of is_opened over a 7d window per client, closed='left' (excludes current message)",
+            "use_case": "Short-term intensity of engagement with messages"
+        },
+        "opened_count_1m": {
+            "description": "Number of messages opened by the client in the past month",
+            "calculation": "Rolling sum of is_opened over a 30d window per client, closed='left'",
+            "use_case": "Medium-term engagement volume"
+        },
+        "opened_count_1m_ex_1w": {
+            "description": "Number of messages opened in the past month excluding the last week",
+            "calculation": "opened_count_1m − opened_count_1w",
+            "use_case": "Separates older engagement from very recent engagement to detect slowdowns"
+        },
+        "clicked_count_1w": {
+            "description": "Number of messages clicked by the client in the past week",
+            "calculation": "Rolling sum of is_clicked over a 7d window per client, closed='left'",
+            "use_case": "Short-term depth of engagement"
+        },
+        "clicked_count_1m": {
+            "description": "Number of messages clicked by the client in the past month",
+            "calculation": "Rolling sum of is_clicked over a 30d window per client, closed='left'",
+            "use_case": "Medium-term depth of engagement"
+        },
+        "clicked_count_1m_ex_1w": {
+            "description": "Number of messages clicked in the past month excluding the last week",
+            "calculation": "clicked_count_1m − clicked_count_1w",
+            "use_case": "Highlights whether clicks are concentrated recently or in earlier weeks"
+        }
+    },
+
+
+    # ========================================================================
+    # 21. PRIOR PRECISION FEATURES (OPEN RATE STABILITY)
+    # ========================================================================
+        "PRIOR_PRECISION_FEATURES": {
+        "open_rate_14d_prior_var": {
+            "description": "Variance of past non-overlapping 14-day open rates for the client before the current message",
+            "calculation": "For each client and message at time t, partition history into consecutive 14d windows strictly before t; compute open rate in each window with at least one message; take the variance across these window open rates, returning NaN if fewer than 2 windows exist",
+            "use_case": "Measures stability of the client’s historical open behavior; lower variance implies higher prior precision over their engagement propensity"
+        }
+    },
+
+    # ========================================================================
+    # 22. HOLIDAY DISTANCE FEATURES
+    # ========================================================================
+    "HOLIDAY_DISTANCE_FEATURES": {
+        "days_since_last_holiday": {
+            "description": "Days since the most recent holiday date before the message was sent",
+            "calculation": "Using a calendar of holiday dates, merge_asof with direction='backward' (strictly < sent_at) to find the last holiday and compute (sent_at − last_holiday_date) in days",
+            "use_case": "Captures post-holiday effects on attention and shopping behavior"
+        },
+        "days_until_next_holiday": {
+            "description": "Days until the next upcoming holiday date after the message was sent",
+            "calculation": "Using the same holiday calendar, merge_asof with direction='forward' (strictly > sent_at) to find the next holiday and compute (next_holiday_date − sent_at) in days",
+            "use_case": "Captures pre-holiday buildup and increased relevance of promotional messages"
+        }
+
+    
+},
 
 }
 
@@ -841,6 +953,11 @@ FEATURE_CATEGORIES = {
     "Global Company Performance Features (9)": "Overall Performace indicator"
     "Client engagement deviation (9)" : "How different the client is from the overall picture"
     "Spam and Deliverability Features (18)": "Indicate Potential Deliverability or Spamming Issues"
+    "Time Since Last Action Features (3)": "Recency of opens, clicks, and purchases",
+    "Rolling Time-to-Action Features (2)": "Recent average reaction speed",
+    "Open/Click Count Window Features (6)": "Short- and medium-term engagement volumes",
+    "Prior Precision Features (1)": "Stability of client open behavior over 14-day blocks",
+    "Holiday Distance Features (2)": "Time to and from major holidays"
 }
 
 
