@@ -15,6 +15,7 @@ from features.clients_expectation_deviation_features import (
 )
 from features.spam_related_features import create_spam_health_features
 from features.holiday_features import add_holiday_distance_features
+from features.time_to_action_features import add_lagged_avg_time_to_action
 
 
 def engineer_all_features(df: pd.DataFrame, verbose: bool = True) -> pd.DataFrame:
@@ -71,7 +72,10 @@ def engineer_all_features(df: pd.DataFrame, verbose: bool = True) -> pd.DataFram
     # Step 7: Detect temporary delivery issues and Potential Spam
     df = create_spam_health_features(df)
 
-    # Step 8: Add holiday features
+    # Step 8: Time to action features
+    df = add_lagged_avg_time_to_action(df)
+
+    # Step 9: Add holiday features
     holidays_df = pd.read_csv("../sampling/data/holidays.csv")
     df = add_holiday_distance_features(df, holidays_df)
 
