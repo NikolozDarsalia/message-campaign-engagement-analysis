@@ -25,8 +25,8 @@ def counterfactual_market_coordination(X_test, model, cluster_names):
     your_volume_range = np.linspace(0, 20, 20)
     market_volume_scenarios = {
         "Current (High Load)": 200,
-        "Coordinated (50% Reduction)": 150,
-        "Coordinated (75% Reduction)": 100,
+        "Coordinated (25% Reduction)": 150,
+        "Coordinated (50% Reduction)": 100,
     }
 
     scenario_colors = ["#d62728", "#ff7f0e", "#2ca02c"]
@@ -153,7 +153,7 @@ def counterfactual_market_coordination(X_test, model, cluster_names):
         x - width / 2,
         gains_50,
         width,
-        label="50% Reduction",
+        label="25% Reduction",
         color="#ff7f0e",
         alpha=0.8,
         edgecolor="black",
@@ -163,7 +163,7 @@ def counterfactual_market_coordination(X_test, model, cluster_names):
         x + width / 2,
         gains_75,
         width,
-        label="75% Reduction",
+        label="50% Reduction",
         color="#2ca02c",
         alpha=0.8,
         edgecolor="black",
@@ -202,7 +202,7 @@ def counterfactual_market_coordination(X_test, model, cluster_names):
     # ---------- POLICY SCENARIOS ----------
     policies = {
         "Status Quo": {"your_vol": 10, "market_vol": 200},
-        "Self-Restraint Only": {"your_vol": 8, "market_vol": 200},
+        "Self-Restraint Only (60%)": {"your_vol": 6, "market_vol": 200},
         "Market Cap (80%)": {"your_vol": 8, "market_vol": 160},
         "Market Cap (60%)": {"your_vol": 6, "market_vol": 120},
         "Aggressive Cap (40%)": {"your_vol": 4, "market_vol": 80},
