@@ -386,7 +386,7 @@ def counterfactual_market_coordination(X_test, model, cluster_names):
     ax5.spines["right"].set_visible(False)
 
     # Add interpretation box
-    textstr = "KEY INSIGHT: Market coordination benefits all segments,\nwith strongest gains for Dormant customers"
+    textstr = "KEY INSIGHT: Market coordination benefits all segments"
     props = dict(
         boxstyle="round",
         facecolor="lightyellow",
