@@ -59,11 +59,11 @@ capstone/
 This project uses a publicly available anonymized marketing dataset hosted on Kaggle. The dataset contains email and push notification campaigns with delivery and open information.
 
 **🔗 Kaggle Dataset:**  
-[E-commerce Events History in Cosmetics Shop](https://www.kaggle.com/datasets/mkechinov/ecommerce-events-history-in-cosmetics-shop)
+[E-commerce multichannel direct messaging 2021-2023](https://www.kaggle.com/datasets/mkechinov/direct-messaging/data)
 
 ### ⚠️ Important Note
 
-The original dataset contains **~700 million rows** and cannot be stored in this repository. Users must download it directly from Kaggle to reproduce the results.
+The original dataset contains **~721 million rows** and cannot be stored in this repository. Users must download it directly from Kaggle to reproduce the results.
 
 ---
 
