@@ -12,10 +12,11 @@ wheels/
 .venv
 
 # Data
-client_first_purchase_date.csv
-campaigns.csv
-messages.parquet
-messages_subset.parquet
+*.parquet
+*.csv
 
 # temporary folder of DuckDB
 .tmp
+
+# plot pictures
+*.png
