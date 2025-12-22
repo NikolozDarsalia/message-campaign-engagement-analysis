@@ -71,7 +71,7 @@ The original dataset contains **~721 million rows** and cannot be stored in this
 
 Due to the size of the raw dataset, we construct a manageable analytical sample:
 
-- Randomly select ~55,000 customers
+- Randomly select ~40,000 customers
 - Retain all messages sent to those customers
 - Preserve within-customer histories and temporal structure
 
@@ -232,7 +232,7 @@ For questions or collaboration inquiries, please open an issue in this repositor
 
 ## 🙏 Acknowledgments
 
-- Dataset provided by [Kaggle](https://www.kaggle.com/datasets/mkechinov/ecommerce-events-history-in-cosmetics-shop)
+- Dataset provided by [Kaggle](https://www.kaggle.com/datasets/mkechinov/direct-messaging/data)
 - Built with Python, XGBoost, SHAP, and scikit-learn
 
 ---
