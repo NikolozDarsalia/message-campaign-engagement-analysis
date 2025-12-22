@@ -12,9 +12,8 @@ wheels/
 .venv
 
 # Data
-client_first_purchase_date.csv
-campaigns.csv
 *.parquet
+*.csv
 
 # temporary folder of DuckDB
 .tmp
